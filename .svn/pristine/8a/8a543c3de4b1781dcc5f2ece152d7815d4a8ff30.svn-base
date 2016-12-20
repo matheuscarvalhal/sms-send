@@ -1,0 +1,21 @@
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a aria-expanded="true" class="dropdown-toggle" data-toggle="dropdown" href="">
+                     Pack <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a ng-href="#package/register">Register Pack</a></li>
+                        <li><a ng-href="#package/overview">Overview Pack</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a tooltip="Home" tooltip-placement="right" class="navbar-brand" href="#/"><i class="glyphicon glyphicon-home"></i></a></li>
+                <!--<li><a href="#/" tooltip="Sair" tooltip-placement="right"> <i class="glyphicon glyphicon-log-out"></i></a></li>-->
+            </ul>
+        </div>
+    </div>
+</nav>

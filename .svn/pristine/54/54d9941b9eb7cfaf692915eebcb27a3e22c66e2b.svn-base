@@ -1,0 +1,178 @@
+<form name="packForm" class="container form-horizontal" ng-submit="save()">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><label class="control-label">Register</label></div>
+        <div class="panel-body">
+            <div class="row">
+                <div ng-class="{'has-error': packForm.name.$invalid}" 
+                     class="col-md-6">
+                    <label for="name" 
+                           class="control-label">
+                        <i ng-show="packForm.name.$error.required"
+                           class="glyphicon glyphicon-asterisk">                                    
+                        </i>Name</label>
+                    <input 
+                        ng-disabled="model.flagEdit"
+                        uppercase
+                        ng-required="true"
+                        class="form-control"
+                        ng-model="model.pack.name"
+                        id="name"
+                        name="name"
+                        type=""
+                        placeholder="Name"
+                        maxlength="64">
+                </div>
+                <div ng-class="{'has-error': packForm.release.$invalid}" 
+                     class="col-md-3">
+                    <label for="release" 
+                           class="control-label">
+                        <i ng-show="packForm.release.$error.required"
+                           class="glyphicon glyphicon-asterisk">                                    
+                        </i>Release</label>
+                    <input
+                        ng-disabled="model.flagEdit"
+                        ng-required="true"
+                        class="form-control"
+                        ng-model="model.pack.release"
+                        id="release"
+                        name="release"
+                        type="text"
+                        placeholder="Release"
+                        maxlength="4">
+                </div>
+                <div ng-class="{'has-error': packForm.date.$invalid}" 
+                     class="col-md-3">
+                    <label for="date" 
+                           class="control-label">
+                        <i ng-show="packForm.date.$error.required"
+                           class="glyphicon glyphicon-asterisk">                                    
+                        </i>Date</label>
+                    <p class="input-group">
+                        <input
+                            ng-disabled="model.flagEdit"
+                            type="text"  
+                            class="form-control small"
+                            datepicker-popup="dd-MM-yyyy" 
+                            ng-model="model.pack.date" 
+                            is-open="model.dateOpened" 
+                            ng-required="true" 
+                            close-text="closer" 
+                            current-text="Current" 
+                            clear-text="Clear" 
+                            id="date"
+                            name="date"/>
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    ng-disabled="model.flagEdit"
+                                    class="btn btn-success" 
+                                    ng-click="openDate($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div  class="row">
+                <!--                <div class="col-md-6" ng-class="{'has-error': packForm.description.$invalid}">
+                                    <label for="description" class="control-label">
+                                        <i ng-show="packForm.description.$error.required"
+                                           class="glyphicon glyphicon-asterisk">                                    
+                                        </i>Description</label>
+                                    <textarea style="resize: none" name="description" class="form-control" rows="3"></textarea>
+                                </div>-->
+                <div class="col-md-3" ng-class="{'has-error': packForm.status.$invalid}">
+                    <label for="status" class="control-label">
+                        <i ng-show="packForm.status.$error.required"
+                           class="glyphicon glyphicon-asterisk">                                    
+                        </i>Status</label>
+                    <select class="form-control"
+                            ng-disabled="model.flagEdit"
+                            id="status"
+                            ng-required="true"
+                            ng-model="model.pack.status"
+                            name="status"
+                            ng-options="situation for situation in model.statusList">
+                        <option value="" ng-hide="model.pack.status !== null">Select Status</option>
+                    </select>
+                </div>
+                <!--                <div ng-class="{'has-error': packForm.defeito.$invalid}" 
+                                     class="col-md-2">
+                                    <label for="defeito" 
+                                           class="control-label">
+                                        <i ng-show="packForm.defeito.$error.required"
+                                           class="glyphicon glyphicon-asterisk">                                    
+                                        </i>Defeito / Pedido</label>
+                                    <input
+                                        ng-required="true"
+                                        class="form-control"
+                                        ng-model=""
+                                        id="defeito"
+                                        name="defeito"
+                                        type="text"
+                                        placeholder="Defeito / Pedido"
+                                        maxlength="6">
+                                </div>-->
+                <div class="col-md-1" ng-hide="model.pack.flagAttachment">
+                    <label for="flag" 
+                           class="control-label">
+                        Attachments?</label>
+                    <input
+                        ng-disabled="model.flagEdit"
+                        ng-required="false"
+                        class="form-control"
+                        ng-model="model.flagScript"
+                        id="flag"
+                        name="flag"
+                        type="checkbox">
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="pull-right btn-group" style="margin-top: 30px; margin-right: 15px;">
+                    <button ng-disabled="model.flagEdit" type="reset" class="btn btn-default">
+                        <i class="glyphicon glyphicon-erase"></i> Clear</button>                      
+                    <button ng-hide="model.flagEdit" ng-disabled="model.flagUpload" style="margin-left: 3px;" ng-disabled="packForm.$invalid" class="btn btn-primary" type="submit">
+                        <i class="glyphicon glyphicon-save"></i> Save</button>
+                    <button ng-show="model.flagEdit" ng-click="enableEdit()" style="margin-left: 3px;" class="btn btn-success" type="button">
+                        <i class="glyphicon glyphicon-edit"></i> Edit</button>    
+                    <button type="button" ng-click="openModal('lg', 'modalPerfil.html', 'modalPackageController', model.pack.id, 'upload')" ng-show="model.flagUpload" style="margin-left: 3px;" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-upload"></i> Upload</button>    
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="container" ng-show="model.pack.flagAttachment">
+    <div class="panel panel-default">
+        <div class="panel-heading"><label class="control-label">Attachments</label></div>
+        <div class="panel-body">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="attachment in model.pack.attachment">
+                        <td>
+                            <div>
+                                {{attachment.name}}{{attachment.extension}}
+                            </div>
+                        </td>
+                        <td>{{attachment.size| Filesize}}</td>
+                        <td>{{attachment.date| date : 'dd/MM/yyyy hh:mm:ss'}}</td>
+                        <td>
+                            <button class="btn btn-danger" type="button" ng-disabled="model.flagEdit">
+                                <i class="glyphicon glyphicon-remove-circle"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div ng-include="'view/package/modal.html'"></div>

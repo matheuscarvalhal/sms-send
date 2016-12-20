@@ -1,0 +1,113 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.eisaPack.common.entity;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+
+/**
+ *
+ * @author matheus carvalhal
+ */
+@Entity
+@Table(name = "pack", schema = "bd_eisa_checklist")
+public class Pack implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PAC_ID", nullable = false)
+    private Integer id;
+
+    @Column(name = "PAC_NAME", nullable = false, length = 45)
+    private String name;
+
+    @Column(name = "PAC_DATE", nullable = false)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date date;
+
+    @Column(name = "PAC_STATUS", nullable = false, length = 15)
+    private String status;
+
+    @Column(name = "PAC_RELEASE", nullable = false, length = 5)
+    private String release;
+    
+    @Column(name = "PAC_FLAG_ATTACHMENT", length = 1)
+    private boolean flagAttachment;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pack", cascade = CascadeType.ALL)
+    private Set<Attachment> attachment = new HashSet(0);
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRelease() {
+        return release;
+    }
+
+    public void setRelease(String release) {
+        this.release = release;
+    }
+
+    public Set<Attachment> getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Set<Attachment> attachment) {
+        this.attachment = attachment;
+    }
+
+    public boolean isFlagAttachment() {
+        return flagAttachment;
+    }
+
+    public void setFlagAttachment(boolean flagAttachment) {
+        this.flagAttachment = flagAttachment;
+    }
+
+}

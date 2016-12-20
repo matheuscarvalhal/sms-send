@@ -1,0 +1,265 @@
+app.controller('packageController', ['$scope', '$modal', '$route', 'packEntity', 'minervaSituationEntity', 'toaster', '$location', function ($scope, $modal, $route, packEntity, minervaSituationEntity, toaster, $location) {
+
+        $scope.model = {
+            pack: new packEntity(),
+            minervaSituation: new minervaSituationEntity(),
+            dateOpened: false,
+            statusList: [],
+            containers: [],
+            anexo: null,
+            anexos: null,
+            flagScript: false,
+            flagUpload: false
+        };
+
+        $scope.findAllMinervaSituation = function () {
+            minervaSituationEntity.findAll().$promise.then(function (result) {
+                $scope.model.statusList = result;
+                console.log($scope.model.statusList);
+            }, function (error) {
+                console.log(error);
+            });
+        };
+
+        $scope.save = function () {
+            $scope.model.pack.$save(function () {
+                $scope.mensagem('success', 'EISA Pack', 'pack saved successfully');
+                $scope.model.flagUpload = true;
+                if ($scope.model.flagScript) {
+                    $scope.openModal('lg', 'modalPerfil.html', 'modalPackageController', $scope.model.pack.id);
+                } else {
+                    $location.path("package/overview");
+                }
+            }, function (error) {
+                $scope.mensagem('error', 'EISA Pack', 'Error');
+                console.log(error);
+            });
+        };
+
+        $scope.remove = function (idPack) {
+            packEntity.remove({id: idPack}).$promise.then(function () {
+                $scope.mensagem('success', 'EISA Pack', 'pack deleted successfully');
+                $route.reload();
+            }, function (error) {
+                $scope.mensagem('error', 'EISA Pack', 'Error.');
+                console.log(error);
+            });
+
+        };
+
+        $scope.searchAll = function () {
+            packEntity.findAll().$promise.then(function (result) {
+                $scope.model.containers = result;
+            }, function (error) {
+                console.log(error);
+            });
+        };
+
+        $scope.searchById = function (id) {
+            return packEntity.get({id: id});
+        };
+
+        $scope.mensagem = function (tipo, titulo, corpo) {
+            toaster.pop({
+                type: tipo,
+                title: titulo,
+                body: corpo,
+                showCloseButton: true
+            });
+        };
+
+        $scope.openDate = function ($event) {
+            $scope.model.dateOpened = true;
+        };
+
+        $scope.openModal = function (size, modal, controller, id, ac) {
+            $modal.open({
+                size: size,
+                animation: $scope.animationsEnabled,
+                templateUrl: modal,
+                controller: controller,
+                resolve: {
+                    id: function () {
+                        return id;
+                    },
+                    action: function () {
+                        return ac;
+                    }
+                }
+            });
+        };
+
+        $scope.findAllMinervaSituation();
+
+    }]);
+
+app.controller('packageControllerEdit', ['$scope', '$routeParams', 'packEntity', 'minervaSituationEntity', '$location', 'toaster', function ($scope, $routeParams, packEntity, minervaSituationEntity, $location, toaster) {
+
+        $scope.model = {
+            pack: null,
+            dateOpened: false,
+            flagEdit: true
+
+        };
+
+        $scope.searchById = function (idPack) {
+            packEntity.get({id: idPack}).$promise.then(function (result) {
+                $scope.model.pack = result;
+            }, function (error) {
+                $scope.mensagem('error', 'EISA Pack', 'Error.');
+                console.log(error);
+            });
+        };
+
+        $scope.findAllMinervaSituation = function () {
+            minervaSituationEntity.findAll().$promise.then(function (result) {
+                $scope.model.statusList = result;
+            }, function (error) {
+                console.log(error);
+            });
+        };
+
+        $scope.save = function () {
+            $scope.model.pack.$save(function () {
+                $scope.mensagem('success', 'EISA Pack', 'pack saved successfully');
+                $scope.model.flagUpload = true;
+                $location.path("package/overview");
+            }, function (error) {
+                $scope.mensagem('error', 'EISA Pack', 'Error');
+                console.log(error);
+            });
+        };
+
+        $scope.enableEdit = function () {
+            if ($scope.model.flagEdit) {
+                $scope.model.flagEdit = false;
+            }else{
+                $scope.model.flagEdit = true;
+            }
+        };
+
+        $scope.openDate = function ($event) {
+            $scope.model.dateOpened = true;
+        };
+
+        $scope.mensagem = function (tipo, titulo, corpo) {
+            toaster.pop({
+                type: tipo,
+                title: titulo,
+                body: corpo,
+                showCloseButton: true
+            });
+        };
+
+        $scope.searchById($routeParams.id);
+        $scope.findAllMinervaSituation();
+
+    }]);
+
+app.controller('modalPackageController', ['$scope', '$modalInstance', '$location', '$controller', 'packEntity', 'DocumentacaoAnexoService', 'toaster', 'id', 'action', function ($scope, $modalInstance, $location, $controller, packEntity, DocumentacaoAnexoService, toaster, id, action) {
+
+        $scope.model = {
+            attachment: [],
+            attachments: []
+        };
+
+        if (action === 'excluir') {
+            var packageController = $scope.$new();
+            $controller('packageController', {$scope: packageController});
+        }
+
+        $scope.attach = function () {
+            var tamanhoTotal = 0;
+            var tamanhoSoma = 0;
+            var qntTotal = $scope.attachments.length;
+            for (var i = 0; i < qntTotal; i++) {
+                $scope.model.attachment = $scope.attachments[i];
+                var arr = $scope.model.attachment.name.split('.');
+                var ext = arr[arr.length - 1];
+
+                tamanhoSoma = tamanhoTotal + $scope.model.attachment.size + tamanhoSoma;
+                if (tamanhoSoma <= (40 * 1024 * 1024) && (ext.toLowerCase() === 'sql' || ext.toLowerCase() === 'zip' || ext.toLowerCase() === 'rar' || ext.toLowerCase() === 'xls')) {
+                    var uploadUrl = "/eisaPack-web/rest/pack/uploadFile";
+                    DocumentacaoAnexoService(id, $scope.model.attachment, uploadUrl, $scope.success, $scope.success);
+                } else {
+                    $scope.documentacoes = [];
+                    qntTotal = 0;
+                    $scope.mensagem('warning', 'EISA Pack', 'Only files .sql / .zip / .rar / .xls');
+                }
+            }
+        };
+
+        $scope.getAttachment = function () {
+            if (action === 'download') {
+                packEntity.findAttachments({id: id}).$promise.then(function (attachments) {
+                    $scope.model.attachments = [];
+                    $scope.model.attachments = attachments;
+                    console.log($scope.model.attachments);
+                }, function (error) {
+                    console.log(error);
+                });
+            }
+        };
+
+        $scope.download = function (attachment) {
+
+            var link = document.createElement("a");
+            link.href = "data:application/sql;base64," + attachment.content;
+
+            link.download = attachment.name + attachment.extension;
+            link.target = "blank";
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        $scope.downloadAll = function () {
+
+            for (var x = 0; x < $scope.model.attachments.length; x++) {
+                var link = document.createElement("a");
+                link.href = "data:application/sql;base64," + $scope.model.attachments[x].content;
+
+                link.download = $scope.model.attachments[x].name + $scope.model.attachments[x].extension;
+                link.target = "blank";
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+        };
+
+        $scope.success = function () {
+            $scope.mensagem('success', 'EISA Pack', 'Attachment saved successfully');
+            $modalInstance.close();
+            $location.path("package/overview");
+        };
+
+        $scope.error = function () {
+            $scope.mensagem('warning', 'EISA Pack', 'Error');
+            $modalInstance.close();
+            $location.path("package/form");
+        };
+
+        $scope.ok = function () {
+            packageController.remove(id);
+            $modalInstance.dismiss('cancel');
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.close();
+        };
+
+        $scope.mensagem = function (tipo, titulo, corpo) {
+            toaster.pop({
+                type: tipo,
+                title: titulo,
+                body: corpo,
+                showCloseButton: true
+            });
+        };
+
+        $scope.getAttachment();
+
+    }]);

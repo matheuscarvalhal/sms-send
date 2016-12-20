@@ -1,0 +1,109 @@
+<div class="row">
+    <form name="filtroForm" class="form-horizontal small col-md-12" ng-submit="buscar()">
+        <div class="panel panel-primary">
+            <div class="panel-heading" style="padding: 5px 15px;"><label class="control-label">Filtro</label></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div 
+                        class="col-xs-6 " >
+                        <label for="nome" 
+                               class="control-label">Nome do Motorista
+                        </label>
+                        <input
+                            ng-model="filter.nome"
+                            class="form-control"
+                            type="text"
+                            placeholder="Nome do Motorista"
+                            maxlength="60"
+                            typeahead="nome for nome in model.nomes | filter:$viewValue | limitTo:8"
+                            ng-change="buscarSugestaoNomesFiltro()">
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="cpf" 
+                               class="control-label">CPF
+                        </label>
+                        <input
+                            onkeypress="javascript: mascara(this, cpf_mask);"
+                            ng-model="filter.cpf"
+                            class="form-control"
+                            id="cpf"
+                            name="cpf"
+                            type="text"
+                            placeholder="XXX.XXX.XXX-XX"
+                            maxlength="14">
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="placa" 
+                               class="control-label">Placa do Veículo
+                        </label>
+                        <input
+                            uppercase
+                            ng-model="filter.placa"
+                            class="form-control"
+                            id="placa"
+                            name="placa"
+                            type="text"
+                            placeholder="Placa"
+                            maxlength="8">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">
+                        <label for="modelo" 
+                               class="control-label">Ano do Veículo
+                        </label>
+                        <p class="input-group">
+                            <input type="text"  class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="model.carro.ano" is-open="status.dataFabricacaoOpened" ng-required="false" close-text="fechar" current-text="hoje" clear-text="limpar" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-success" ng-click="openDataFabricacao($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="modelo" 
+                               class="control-label">Modelo do Veículo
+                        </label>
+                        <input
+                            ng-model="filter.modelo"
+                            class="form-control"
+                            id="modelo"
+                            name="modelo"
+                            type="text"
+                            placeholder="Modelo do Veículo"
+                            maxlength="10">
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="modelo" 
+                               class="control-label">Data de Início do Contrato
+                        </label>
+                        <p class="input-group">
+                            <input type="text"  class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="model.contrato.dataInicio" is-open="status.dataInicioContratoOpened" ng-required="false" close-text="fechar" current-text="hoje" clear-text="limpar" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-success" ng-click="openDataInicioContrato($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-xs-3">
+                        <label for="modelo" 
+                               class="control-label">Data de Fim do Contrato
+                        </label>
+                        <p class="input-group">
+                            <input type="text"  class="form-control" datepicker-popup="dd/MM/yyyy" ng-model="model.contrato.dataFim" is-open="status.dataFimContratoOpened" ng-required="false" close-text="fechar" current-text="hoje" clear-text="limpar" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-success" ng-click="openDataFimContrato($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="pull-right btn-group" style="margin-right: 15px;">
+                        <button type="reset" ng-click="limparFiltro()" class="btn btn-default btn-sm">
+                            <i class="glyphicon glyphicon-erase"></i> Limpar</button>                      
+                        <button style="margin-left: 3px;" class="btn btn-primary btn-sm" type="submit">
+                            <i class="glyphicon glyphicon-save"></i> Consultar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

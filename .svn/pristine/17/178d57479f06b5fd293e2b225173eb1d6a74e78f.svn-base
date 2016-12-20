@@ -1,0 +1,62 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.eisaPack.service.dao.impl;
+
+import br.com.eisaPack.common.business.AttachmentService;
+import br.com.eisaPack.common.business.BusinessQuery;
+import br.com.eisaPack.common.entity.Attachment;
+import br.com.eisaPack.service.dao.GenericsDao;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ *
+ * @author matheus carvalhal
+ */
+@Component
+public class AttachmentServiceImpl implements AttachmentService {
+
+    private GenericsDao<Attachment> genericsDao;
+
+    @Autowired
+    public AttachmentServiceImpl(GenericsDao<Attachment> genericsDao) {
+        this.genericsDao = genericsDao;
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public Attachment saveUpdate(Attachment attachment) {
+        genericsDao.saveOrUpdate(attachment);
+        return genericsDao.findById(attachment.getClass(), attachment.getId());
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void delete(Attachment attachment) {
+        genericsDao.delete(attachment);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Attachment findById(Integer id) {
+        return genericsDao.findById(Attachment.class, id);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Attachment> find(BusinessQuery query) {
+        return genericsDao.find(query);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Attachment> findAll() {
+        return genericsDao.findAll(Attachment.class);
+    }
+
+}

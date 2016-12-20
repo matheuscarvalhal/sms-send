@@ -1,0 +1,27 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.eisaPack.common.business;
+
+import br.com.eisaPack.common.entity.Attachment;
+import java.util.List;
+
+/**
+ *
+ * @author matheus Carvalhal
+ */
+public interface AttachmentService {
+
+    public Attachment saveUpdate(Attachment attachment);
+
+    public void delete(Attachment attachment);
+
+    public Attachment findById(Integer id);
+
+    public List<Attachment> find(BusinessQuery query);
+
+    public List<Attachment> findAll();
+
+}

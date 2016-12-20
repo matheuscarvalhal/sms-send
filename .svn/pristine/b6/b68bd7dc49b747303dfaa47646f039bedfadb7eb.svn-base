@@ -1,0 +1,74 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.eisaPack.service.dao.impl;
+
+import br.com.eisaPack.common.business.BusinessQuery;
+import br.com.eisaPack.common.business.PackService;
+import br.com.eisaPack.common.entity.Pack;
+import br.com.eisaPack.service.dao.GenericsDao;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ *
+ * @author matheus carvalhal
+ */
+@Component
+public class PackServiceImpl implements PackService {
+
+    private GenericsDao<Pack> genericsDao;
+
+    @Autowired
+    public PackServiceImpl(GenericsDao<Pack> genericsDao) {
+        this.genericsDao = genericsDao;
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public Pack saveUpdate(Pack pack) {
+        genericsDao.saveOrUpdate(pack);
+        return genericsDao.findById(pack.getClass(), pack.getId());
+    }
+    
+    @Transactional(readOnly = false)
+    @Override
+    public Integer save(Pack pack) {
+        return genericsDao.save(pack);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void delete(Pack pack) {
+        genericsDao.delete(pack);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Pack findById(Integer id) {
+        return genericsDao.findById(Pack.class, id);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Pack> find(BusinessQuery query) {
+        return genericsDao.find(query);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Pack> findAll() {
+        return genericsDao.findAll(Pack.class);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Pack findById(BusinessQuery query) {
+        return genericsDao.findById(query);
+    }
+
+}

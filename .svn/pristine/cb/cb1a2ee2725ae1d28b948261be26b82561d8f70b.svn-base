@@ -1,0 +1,21 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.eisaPack.common.business;
+
+/**
+ *
+ * @author matheus carvalhal
+ */
+public abstract class BusinessQuery {
+    
+    public abstract BusinessQuery from();
+
+    public abstract BusinessQuery whereId(Integer id);
+    
+    public abstract BusinessQuery and();
+
+    public abstract String build();
+}

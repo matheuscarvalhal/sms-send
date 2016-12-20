@@ -1,0 +1,14 @@
+app.factory('DocumentResource', function ($scope, $resource, getHeaderFilename) {
+    $resource('document/:Id', {Id: "@Id"}, {
+        download: {
+            method: 'GET',
+            responseType: 'arraybuffer',
+            transformResponse: function (data, headers) {
+                return {
+                    data: data,
+                    filename: parseHeaderFilename(headers)
+                };
+            }
+        }
+    });
+});

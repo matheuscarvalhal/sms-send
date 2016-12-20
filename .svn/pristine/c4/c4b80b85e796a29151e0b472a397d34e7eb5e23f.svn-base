@@ -1,0 +1,13 @@
+app.factory('packEntity', ['$resource', function ($resource) {
+    var packEntity = $resource('/eisaPack-web/rest/pack/:verbo', {}, {
+        findAll: {method: 'GET', params: {verbo: 'findAll'}, isArray: true},
+        find: {method: 'GET', params: {verbo: 'find'}, isArray: false},
+        findNamesUser: {method: 'GET', params: {verbo: 'findNamesUser'}, isArray: true},
+        get: {method: 'GET', params: {verbo: 'get'}, isArray: false},
+        save: {method: 'POST', params: {verbo: 'save'}, isArray: false},
+        uploadFile: {method: 'POST', params: {verbo: 'uploadFile'}, isArray: false},
+        findAttachments: {method: 'GET', params: {verbo: 'findAttachments'}, isArray: true},
+        remove: {method: 'DELETE', params: {verbo: 'remove'}, isArray: false}
+    });
+    return packEntity;
+}]);

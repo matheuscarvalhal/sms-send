@@ -1,0 +1,73 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.eisaPack.service.dao;
+
+import br.com.eisaPack.common.business.BusinessQuery;
+import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+/**
+ *
+ * @author Matheus
+ * @param <T>
+ */
+@Component
+public class GenericsDao<T> implements GenericsDaoInterface<T> {
+
+    private SessionFactory sessionFactory;
+
+    @Autowired
+    public GenericsDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    @Override
+    public void saveOrUpdate(T entity) {
+        this.sessionFactory.getCurrentSession().saveOrUpdate(entity);
+    }
+    
+    @Override
+    public Integer save(T entity) {
+        return (Integer) this.sessionFactory.getCurrentSession().save(entity);
+    }
+
+    @Override
+    public void delete(T entity) {
+        this.sessionFactory.getCurrentSession().delete(entity);
+    }
+
+    @Override
+    public T findById(Class c, int id) {
+        T entity = (T) this.sessionFactory.getCurrentSession().get(c, id);
+        return entity;
+    }
+    
+    @Override
+    public T findById(BusinessQuery query) {
+        Query hql = this.sessionFactory.getCurrentSession().createQuery(query.build());
+        return (T) hql.uniqueResult();
+    }
+
+    @Override
+    public List<T> findAll(Class c) {
+        List<T> list = (List<T>) this.sessionFactory.getCurrentSession()
+                .createCriteria(c)
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .list();
+        return list;
+    }
+
+    @Override
+    public List<T> find(BusinessQuery query) {
+        Query hql = this.sessionFactory.getCurrentSession().createQuery(query.build());
+        return hql.list();
+    }
+    
+}

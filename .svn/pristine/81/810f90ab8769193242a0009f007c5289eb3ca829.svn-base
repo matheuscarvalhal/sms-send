@@ -1,0 +1,6 @@
+app.factory('minervaSituationEntity', ['$resource', function ($resource) {
+    var minervaSituationEntity = $resource('/eisaPack-web/rest/minervaSituation/:verbo', {}, {
+        findAll: {method: 'GET', params: {verbo: 'findAll'}, isArray: true}
+    });
+    return minervaSituationEntity;
+}]);

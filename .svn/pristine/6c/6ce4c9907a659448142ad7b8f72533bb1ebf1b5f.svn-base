@@ -1,0 +1,66 @@
+<script type="text/ng-template" id="modalPerfil.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Upload scripts</h4>
+    </div>
+    <div class="modal-body">
+        <div class="panel-body">
+            <form name="attachmentForm" class="container form-horizontal" ng-submit="attach()">
+                <div class="form-group">
+                <div class="col-xs-12 col-sm-6 col-md-3" ng-class="{'has-error': attachmentForm.file.$invalid}">
+                <label for="file" class="control-label "><i ng-show="attachmentForm.file.$error.required"
+                    class="glyphicon glyphicon-asterisk"></i>
+                </label>
+                <input class="table-content" id="file" name="uploads[]" type="file" ng-model="attachments" file-model="attachments" multiple/>
+                </div>
+                    <div class="row">
+                        <div class="btn-group" style="margin-left:400px">
+                            <button  ng-disabled="attachmentForm.$invalid" class="pull-left btn btn-primary" type="submit">
+                            <i class="glyphicon glyphicon-save"></i> Attach
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="modalExcluir.html">
+    <div class="modal-header">
+    <h4 class="modal-title">Really delete?</h4>
+    </div>
+    <div class="modal-footer">
+    <button class="btn btn-primary btn-sm" type="button" ng-click="ok()">Sim</button>
+    <button class="btn btn-warning btn-md" type="button" ng-click="cancel()">Não</button>
+    </div>
+</script>
+<script type="text/ng-template" id="modalDownload.html">
+    <div class="modal-header">
+    <h4 class="modal-title">Attachments</h4>
+    </div>
+    <div class="modal-body">
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="attachment in model.attachments">
+                    <td>
+                        <a ng-click="download(attachment)" data-toggle="tooltip" data-placement="right" tooltip="Download Attachment" tooltip-placement="right"
+                            style="cursor: pointer;">
+                             {{attachment.name}}{{attachment.extension}}
+                        </a>
+                    </td>
+                    <td>{{attachment.size | Filesize}}</td>
+                    <td>{{attachment.date| date : 'dd/MM/yyyy hh:mm:ss'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary btn-sm" type="button" ng-click="downloadAll()">Download All</button>
+    </div>
+</script>

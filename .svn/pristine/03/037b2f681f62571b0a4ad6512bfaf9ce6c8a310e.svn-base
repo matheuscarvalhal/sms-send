@@ -1,0 +1,222 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.eisaPack.web.rest;
+
+import br.com.eisaPack.common.business.AttachmentService;
+import br.com.eisaPack.common.business.PackService;
+import br.com.eisaPack.common.business.SearchPack;
+import br.com.eisaPack.common.entity.Attachment;
+import br.com.eisaPack.common.entity.Pack;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+/**
+ *
+ * @author matheus carvalhal
+ */
+@Component
+@Path("/pack")
+public class PackResource {
+
+    @Autowired
+    private PackService service;
+    @Autowired
+    private AttachmentService serviceAttachment;
+
+    private final String DIR_HOME = System.getProperty("user.home");
+    private final String TEMP = "\\temp\\";
+
+    @GET
+    @Path("/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Pack get(@QueryParam("id") Integer id) {
+        return service.findById(new SearchPack().from().leftJoinFethAttachment().whereId(id));
+    }
+
+    @GET
+    @Path("/findAll")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Pack> findAll() {
+        return service.findAll();
+    }
+
+    @POST
+    @Path("/save")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Pack save(Pack pack) {
+        if (pack.getId() != null) {
+            Pack packAux = service.saveUpdate(pack);
+            if(packAux != null){
+                for (Attachment attachment : packAux.getAttachment()) {
+                    attachment.setPack(packAux);
+                    serviceAttachment.saveUpdate(attachment);
+                }
+            }
+            return packAux;
+        } else {
+            return service.findById(service.save(pack));
+        }
+    }
+
+    @DELETE
+    @Path("/remove")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void remove(@QueryParam("id") Integer id) {
+        service.delete(service.findById(id));
+    }
+
+    @POST
+    @Path("/uploadFile")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public void postAnexo(@FormDataParam("file") InputStream uploadedInputStream,
+            @FormDataParam("name") String name,
+            @FormDataParam("extensao") String extensao, @FormDataParam("tamanho") Integer tamanho,
+            @FormDataParam("id") Integer idPack,
+            @Context HttpServletRequest httpServletRequest) throws FileNotFoundException, IOException {
+
+        if (tamanho <= (40 * 1024 * 1024) && (extensao.toLowerCase().equals(".sql") || extensao.equals(".zip") || extensao.equals(".rar") || extensao.equals(".xls"))) {
+            Attachment attachment = new Attachment();
+            try {
+                attachment.setContent(IOUtils.toByteArray(uploadedInputStream));
+                attachment.setName(name);
+                attachment.setExtension(extensao);
+                attachment.setSize(tamanho);
+                attachment.setDate(new Date());
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            } finally {
+                Pack pack = service.findById(idPack);
+                pack.setFlagAttachment(true);
+                attachment.setPack(pack);
+                if (serviceAttachment.saveUpdate(attachment) != null) {
+                    service.saveUpdate(pack);
+                }
+            }
+        }
+    }
+
+    @GET
+    @Path("/findAttachments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<Attachment> findAttachment(@QueryParam("id") Integer id) {
+        return service.findById(new SearchPack().from().leftJoinFethAttachment().whereId(id)).getAttachment();
+    }
+
+    private void convertInputStreamToFile(InputStream uploadedInputStream, String name, String extensao) throws IOException {
+        OutputStream outputStream = null;
+
+        try {
+
+            String path = new File(DIR_HOME).getParentFile().getParentFile().getPath();
+
+            File file = new File(path.concat(TEMP).concat(name).concat(".").concat(extensao));
+
+            outputStream = new FileOutputStream(file);
+
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            while ((read = uploadedInputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (uploadedInputStream != null) {
+                try {
+                    uploadedInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+    private void convertByteToFile(Attachment attachment) {
+
+        String path = new File(DIR_HOME).getParentFile().getParentFile().getPath();
+
+        File file = new File(path.concat(TEMP).concat(attachment.getName()).concat(".").concat(attachment.getExtension()));
+
+        try {
+            FileOutputStream fileOuputStream = new FileOutputStream(file.getPath());
+            fileOuputStream.write(attachment.getContent());
+            fileOuputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printFileConsole(InputStream uploadedInputStream) {
+        BufferedReader br = null;
+        try {
+
+            br = new BufferedReader(new InputStreamReader(uploadedInputStream));
+
+            StringBuilder sb = new StringBuilder();
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            System.out.println(sb.toString());
+            System.out.println("\nDone!");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (uploadedInputStream != null) {
+                try {
+                    uploadedInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}

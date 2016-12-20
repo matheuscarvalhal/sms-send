@@ -1,0 +1,54 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.eisaPack.common.business;
+
+/**
+ *
+ * @author matheus.c.correia
+ */
+public class SearchPack extends BusinessQuery {
+
+    private static StringBuilder query;
+
+    public SearchPack() {
+        this.query = new StringBuilder();
+    }
+
+    @Override
+    public SearchPack from() {
+        this.getQuery().append("select distinct p from Pack p ");
+        return this;
+    }
+
+    @Override
+    public BusinessQuery whereId(Integer id) {
+        if (id != null) {
+            this.getQuery().append(" where p.id = ").append(id);
+        }
+        return this;
+    }
+
+    @Override
+    public BusinessQuery and() {
+        this.getQuery().append(" and ");
+        return this;
+    }
+
+    @Override
+    public String build() {
+        return this.getQuery().toString();
+    }
+
+    public SearchPack leftJoinFethAttachment() {
+        this.getQuery().append(" left join fetch p.attachment at ");
+        return this;
+    }
+
+    public StringBuilder getQuery() {
+        return this.query;
+    }
+
+}

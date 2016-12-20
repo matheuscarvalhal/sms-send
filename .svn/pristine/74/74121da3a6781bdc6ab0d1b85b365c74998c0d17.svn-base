@@ -1,0 +1,20 @@
+app.config(['$routeProvider', function ($routeProvider) {
+        $routeProvider
+                .when('/', {
+                    templateUrl: '../../eisaPack-web/view/home.html',
+                    controller: 'packageController'
+                })
+                .when('/package/register', {
+                    templateUrl: '../../eisaPack-web/view/package/form.html',
+                    controller: 'packageController'
+                })
+                .when('/package/register/:id', {
+                    templateUrl: '../../eisaPack-web/view/package/form.html',
+                    controller: 'packageControllerEdit'
+                })
+                .when('/package/overview/', {
+                    templateUrl: '../../eisaPack-web/view/package/overview.html',
+                    controller: 'packageController'
+                })
+                .otherwise({redirectTo: '/'});
+    }]);

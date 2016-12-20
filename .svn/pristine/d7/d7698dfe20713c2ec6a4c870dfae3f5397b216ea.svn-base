@@ -1,0 +1,18 @@
+app.service('DocumentacaoAnexoService', ['$http', function ($http) {
+    var uploadFileToUrl = function (idPack, file, uploadUrl, uploadOK, uploadError) {
+        var fd = new FormData();
+        var arr = file.name.split('.');
+        fd.append('file', file);
+        fd.append('name', arr[0]);
+        fd.append('extensao', '.'+arr[arr.length - 1]);
+        fd.append('tamanho', file.size);
+        fd.append('id', idPack);
+        $http.post(uploadUrl, fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+                .success(uploadOK)
+                .error(uploadError);
+    };
+    return uploadFileToUrl;
+}]);

@@ -1,0 +1,53 @@
+<html ng-app="app">
+    <head>
+        <title>EISA Pack</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="css/lib/bootstrap-3.3.5/css/bootstrap.css"/>
+        <link rel="stylesheet" type="text/css" href="css/lib/angularJS-Toaster/toaster.css"/>
+        <link rel="stylesheet" type="text/css" href="css/lib/angular-material/angular-material.min.css"/>
+        <link href="template/startbootstrap/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    </head>
+    
+    <body>
+        <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
+        <div ng-include="'view/parties/menu.html'"></div> 
+        <span class="spinner" us-spinner="{radius:30, width:8, length: 16}"></span>
+        <div class="container" ng-view></div>
+    </body>
+    
+    <script type="text/javascript" src="js/lib/jquery/jquery.js" ></script>
+    <script type="text/javascript" src="js/lib/validacao.js" ></script>
+    <script type="text/javascript" src="js/lib/angularJS/angular.js" ></script>
+    <script type="text/javascript" src="js/lib/angularJS/angular-locale_pt-br.js" ></script>
+    <script type="text/javascript" src="js/lib/angularJS/angular-route.js" ></script>
+    <script type="text/javascript" src="js/lib/angularJS/angular-resource.js" ></script> 
+    <script type="text/javascript" src="js/lib/angularJS/angular-animate.js" ></script>
+    <script type="text/javascript" src="js/lib/angularJS/angular-aria.min.js" ></script>
+    <script type="text/javascript" src="js/lib/angularJS/angular-messages.min.js" ></script>
+    <script type="text/javascript" src="js/lib/angularJS-Toaster/toaster.js" ></script> 
+    <script type="text/javascript" src="js/lib/ng-map/ng-map.min.js" ></script>
+    <script type="text/javascript" src="js/lib/bootstrap/bootstrap.js" ></script> 
+    <script type="text/javascript" src="js/lib/ui-bootstrap/ui-bootstrap-tpls-0.13.4.js" ></script> 
+    <script type="text/javascript" src="js/lib/bootstrap/bootstrap-colorpicker-module.js" ></script> 
+    <script type="text/javascript" src="js/lib/angularJS/angular-wysiwyg.js" ></script> 
+    <script type="text/javascript" src="js/lib/spin.min.js" ></script> 
+    <script type="text/javascript" src="js/lib/angular-spinner.js" ></script> 
+    <script type="text/javascript" src="js/lib/angular-loading-spinner.js" ></script> 
+    <script type="text/javascript" src="js/lib/angular-input-masks-standalone.min.js" ></script> 
+    <script type="text/javascript" src="js/lib/angular-material/angular-material.min.js" ></script> 
+    <script type="text/javascript" src="js/lib/ngMask/ngMask.min.js" ></script> 
+    <script type="text/javascript" src="js/lib/angular-file-upload.min.js" ></script> 
+    <script type="text/javascript" src="js/lib/angular-file-upload.min.js.map" ></script> 
+    <script type="text/javascript" src="js/lib/angular-file-model.js" ></script> 
+    
+    <script type="text/javascript" src="js/app/app.js" ></script> 
+    <script type="text/javascript" src="js/app/route.js" ></script> 
+    <script type="text/javascript" src="js/app/entity/packageEntity.js" ></script> 
+    <script type="text/javascript" src="js/app/service/DocumentacaoAnexoService.js" ></script> 
+    <script type="text/javascript" src="js/app/entity/minervaSituationEntity.js" ></script> 
+    <script type="text/javascript" src="js/app/controller/package/packageController.js" ></script>
+    <script type="text/javascript" src="js/app/directive/uppercase.js" ></script>
+    <script type="text/javascript" src="js/app/filter/Filesize.js" ></script>
+</html>

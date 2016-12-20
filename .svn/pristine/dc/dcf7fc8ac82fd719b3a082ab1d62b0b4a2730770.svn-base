@@ -1,0 +1,31 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.eisaPack.service.dao.impl;
+
+import br.com.eisaPack.common.business.MinervaSituationService;
+import br.com.eisaPack.common.enums.MinervaSituation;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.stereotype.Component;
+
+/**
+ *
+ * @author matheus carvalhal
+ */
+@Component
+public class MinervaSituationImpl implements MinervaSituationService {
+
+    @Override
+    public List<String> findAll() {
+        List<String> list = new ArrayList<String>();
+
+        for (MinervaSituation c : MinervaSituation.values()) {
+            list.add(c.toString());
+        }
+        return list;
+    }
+
+}
